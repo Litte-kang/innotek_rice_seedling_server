@@ -55,6 +55,8 @@ module.exports.getWorkInfo = function getWorkInfo(req, res, next){
 			console.log("no work informations");
 			
 			res.send(201);
+			
+			next();
 		}
 		else
 		{
