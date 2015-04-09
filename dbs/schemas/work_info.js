@@ -68,9 +68,9 @@ module.exports.getWorkInfos = function getWorkInfos(req, res, next){
 			
 			for (var i = 0; i < len; ++i)
 			{
-				json.address = infos[0].address;
-				json.riceSeedlingSum = infos[0].data[0];
-				json.earthSize = infos[0].data[1];
+				json.address = infos[i].address;
+				json.riceSeedlingSum = infos[i].data[0];
+				json.earthSize = infos[i].data[1];
 				
 				vaild_infos += JSON.stringify(json) + ',';				
 			}
