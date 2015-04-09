@@ -24,7 +24,7 @@ server.use(function (req, res, next){
 
 server.get({path:'work_infos'}, function(req, res, next){
 
-	workInfo.getWorkInfo(req, res, next);
+	workInfo.getWorkInfos(req, res, next);
 });
 	
 module.exports.startHttpServer = function startHttpServer(){

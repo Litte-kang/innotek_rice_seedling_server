@@ -40,15 +40,11 @@ module.exports.insertOrUpdateWorkInfo = function insertOrUpdateWorkInfo(info){
  *@param 	{json} 	info.
  *@return	none.
  */
-module.exports.getWorkInfo = function getWorkInfo(req, res, next){
+module.exports.getWorkInfos = function getWorkInfos(req, res, next){
 
-	workInfo.findOne({midAddress:'0000000000'}, function(err, info){
+	workInfo.find({midAddress:'0000000000'}, function(err, infos){
 	
-		var vaild_info = 
-		{
-			address:'',
-			data:[]
-		};
+		var vaild_infos = '';
 		
 		if (err)
 		{
@@ -60,12 +56,33 @@ module.exports.getWorkInfo = function getWorkInfo(req, res, next){
 		}
 		else
 		{
-			vaild_info.address = info.address;
-			vaild_info.data = info.data;
+			var json = 
+			{
+				address:"",
+				riceSeedlingSum:0,
+				earthSize:0
+			};
+			var len = infos.length - 1;
+			
+			vaild_infos += '[';
+			
+			for (var i = 0; i < len; ++i)
+			{
+				json.address = infos[0].address;
+				json.riceSeedlingSum = infos[0].data[0];
+				json.earthSize = infos[0].data[1];
+				
+				vaild_infos += JSON.stringify(json) + ',';				
+			}
+			
+			json.address = infos[i].address;
+			json.riceSeedlingSum = infos[i].data[0];
+			json.earthSize = infos[i].data[1];
+			
+			vaild_infos += JSON.stringify(json) + ']';	
 			
 			res.setHeader('Content-Type', 'text/html');
-			res.send(JSON.stringify(vaild_info));
-			
+			res.send(vaild_infos);
 			next();			
 		}
 		
