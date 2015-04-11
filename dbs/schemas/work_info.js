@@ -18,20 +18,37 @@ var workInfo = mongoose.model('work_infos', schema, 'work_infos');
  *@return	none.
  */
 module.exports.insertOrUpdateWorkInfo = function insertOrUpdateWorkInfo(info){
-
-	workInfo.findOneAndUpdate({midAddress:info.midAddress, address:info.address},
-	{midAddress:info.midAddress, address:info.address, data:info.data, upDatedAt: new Date()}, {upsert:true},
-	function(err, result){
-
+	
+	workInfo.findOne({midAddress:info.midAddress, address:info.address}, function(err, doc){
+		
 		if (err)
 		{
-			console.log("save work information failed!");
+			console.log("insert or update work informations failed!");
 		}
 		else
 		{
-			console.log("save work information sucessful!");
+			if (doc)
+			{
+				info.data[0] += doc.data[0];
+			}
+			
+			workInfo.update({midAddress:info.midAddress, address:info.address}, 
+			{midAddress:info.midAddress, address:info.address, data:info.data, upDatedAt: new Date()},
+			{upsert:true},
+			function(err, result){
+		
+				if (err)
+				{
+					console.log("insert or update work informations failed!");
+				}
+				else
+				{
+					console.log("insert or update work informations successful!");
+				}
+			});
 		}
-	});	
+
+	});
 };
 
 /**
@@ -42,7 +59,7 @@ module.exports.insertOrUpdateWorkInfo = function insertOrUpdateWorkInfo(info){
  */
 module.exports.getWorkInfos = function getWorkInfos(req, res, next){
 
-	workInfo.find({midAddress:'0000000000'}, function(err, infos){
+	workInfo.find({midAddress:'0000000000'}, function(err, docs){
 	
 		var vaild_infos = '';
 		
@@ -59,25 +76,25 @@ module.exports.getWorkInfos = function getWorkInfos(req, res, next){
 			var json = 
 			{
 				address:"",
-				riceSeedlingSum:0,
-				earthSize:0
+				workSpeed:0,
+				totalRotates:0
 			};
-			var len = infos.length - 1;
+			var len = docs.length - 1;
 			
 			vaild_infos += '[';
 			
 			for (var i = 0; i < len; ++i)
 			{
-				json.address = infos[i].address;
-				json.riceSeedlingSum = infos[i].data[0];
-				json.earthSize = infos[i].data[1];
+				json.address = docs[i].address;
+				json.workSpeed = docs[i].data[1];
+				json.totalRotates = docs[i].data[0];
 				
 				vaild_infos += JSON.stringify(json) + ',';				
 			}
 			
-			json.address = infos[i].address;
-			json.riceSeedlingSum = infos[i].data[0];
-			json.earthSize = infos[i].data[1];
+			json.address = docs[i].address;
+			json.workSpeed = docs[i].data[1];
+			json.totalRotates = docs[i].data[0];
 			
 			vaild_infos += JSON.stringify(json) + ']';	
 			
