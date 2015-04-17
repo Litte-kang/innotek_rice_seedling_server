@@ -59,7 +59,7 @@ module.exports.insertOrUpdateWorkInfo = function insertOrUpdateWorkInfo(info){
  */
 module.exports.getWorkInfos = function getWorkInfos(req, res, next){
 
-	workInfo.find({midAddress:'0000000000'}, function(err, docs){
+	workInfo.find(function(err, docs){
 	
 		var vaild_infos = '';
 		
